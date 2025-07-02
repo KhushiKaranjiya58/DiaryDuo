@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.1/lottie.min.js"></script>
+
+    
+</head>
+<body>
+   <div class="wrapper">
+         <header>
+        <div class="navbar">
+            <!-- <div id="natureAnimation" style="width:200px; height:200px;"></div> -->
+            <div class="nav-buttons-left">
+                <a href="">About us</a>
+                <a href="">Home</a>
+                <a href="">Contact us</a>
+            </div>
+            <div class="nav-buttons-right">
+                    <button class="Loginbutton" onclick="window.location.href='loginpage.html'">LogIn</button>
+                    <button class="SignUpbutton" onclick="window.location.href='signuppage.html'">SignUp</button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="parentcontainer">
+
+        <div class="habit-tracker">
+            <h2 class="center-heading"><i class="fa-solid fa-dice"></i>  Add Your Daily Habits</h2>
+
+            <div class="habit-input-area">
+                <input type="text" id="addhabits" name="addhabits" placeholder="Add your daily habits" required>
+                <button onClick="addHabit()"><i class="fa-solid fa-plus"></i> Add Habit</button>
+            </div>
+
+            <div class="habit-block">
+                 <div id="habitlist"></div>
+                 <a href="#" id="seeMoreLink" style="display: none;">See more Habits</a>
+            </div>
+        </div>
+
+        <div class="personal-diary">
+            <h2 class="center-heading"><i class="fa-solid fa-book"></i>  Having thoughts lately on the mind??</h2>
+            
+
+            <div class="diary-content">
+              <div class="diary-input-area">
+                 <textarea name="dairyInput" id="diaryInput" rows="5" placeholder="Jot down your thoughts here..."></textarea>
+                 <button onClick="saveDiary()">Save</button>
+              </div>
+            <div id="diaryEntries" class="diary-block"></div>
+            <a href="#" id="seeMoreDiary" style="display:none;">See more Diary</a>
+
+            </div>
+        </div>
+    </div>
+   </div>
+
+    <footer>
+        <div class="footer-content">
+            This is the footer section!!
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

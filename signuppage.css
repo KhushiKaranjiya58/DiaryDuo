@@ -1,0 +1,84 @@
+body{
+    background-color: #B8CFCE;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.parentcontainer{
+    background-color:#EAEFEF;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width:100%;
+    max-width: 400px;
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+}
+    
+#signupheading {
+    color: darkblue;
+    text-align: center;
+    margin: 0;
+}
+
+P {
+    text-align: center;
+    margin: 0;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* width: 100%; */
+}
+
+input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input:focus{
+    border-color: darkblue;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.3);
+}
+
+button{
+    width: 100%;
+    padding: 10px;
+    background-color: #A7C4A0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-sizing: border-box;
+}
+
+button:hover{
+    background-color:#202938;
+}
+
+label{
+    font-style:normal;
+}
+
+@media (max-width: 480px) {
+    .parentcontainer {
+        padding: 10px;
+    }
+    input, button {
+        font-size: 0.9rem;
+    }
+}

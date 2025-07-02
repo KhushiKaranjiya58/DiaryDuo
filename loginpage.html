@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="loginpage.css">
+</head>
+<body>
+    <div class = "parentcontainer">
+        <h1 id="loginheading">LogIn</h1>
+        <p>Login to continue</p>
+                
+     <form onsubmit="logIn(event)">
+         <label for="username" >Username</label>
+         <input type="text" id="username" name="username" placeholder="Enter your name here" required>  
+
+         <label for="useremail" >Email</label>
+         <input type="text" id="useremail" name="useremail" placeholder="Enter your email here" required>
+
+         <label for="userpassword">Password</label>
+         <input type="password" id="userpassword" name="userpassword" placeholder="Enter your password here">
+            
+         <button type="submit" id="button">Submit</button>
+
+         <p class="signup-link">Don't have an account? <a href="signuppage.html">SignUp</a></p>
+
+     </form> 
+    </div> 
+
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="signuppage.css">
+</head>
+<body>
+    <div class = "parentcontainer">
+        <h1 id="signupheading">SignUp</h1>
+        <p>Sign Up to continue</p>
+                
+     <form onsubmit="signup(event)">
+         <label for="username" >Username</label>
+         <input type="text" id="username" name="username" placeholder="Enter your name here" required>  
+
+         <label for="useremail" >Email</label>
+         <input type="text" id="useremail" name="useremail" placeholder="Enter your email here" required>
+
+         <label for="userpassword">Password</label>
+         <input type="password" id="userpassword" name="userpassword" placeholder="Enter your password here">
+         
+         <label for="confirmpassword">Confirm Password</label>
+         <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Enter your password here">
+         <!-- <small style="color: gray;">Password must be at least 8 characters</small> -->
+
+         <button type="submit" id="button">Submit</button>
+     </form> 
+    </div> 
+</body>
+
+</html>
