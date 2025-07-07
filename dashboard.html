@@ -7,19 +7,27 @@
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.1/lottie.min.js"></script>
-
+    <link rel="icon" href="data:,">
     
 </head>
 <body>
    <div class="wrapper">
          <header>
         <div class="navbar">
-            <!-- <div id="natureAnimation" style="width:200px; height:200px;"></div> -->
+
+            <!-- Logo + Title -->
+
+             <div class="nav-logo-title">
+                <img src="DiaryDuoLogo.png" alt="DiaryDuo Logo" style="height: 80px; margin-right: 20px;" />
+                <h1 class= "site-title" style="font-size: 28px;  font-weight: bold; color: #ffffff;">DiaryDuo</h1>
+             </div>
+            <!-- Left nav links -->
             <div class="nav-buttons-left">
                 <a href="">About us</a>
                 <a href="">Home</a>
                 <a href="">Contact us</a>
             </div>
+            <!-- Right auth buttons -->
             <div class="nav-buttons-right">
                     <button class="Loginbutton" onclick="window.location.href='loginpage.html'">LogIn</button>
                     <button class="SignUpbutton" onclick="window.location.href='signuppage.html'">SignUp</button>
@@ -46,9 +54,14 @@
         <div class="personal-diary">
             <h2 class="center-heading"><i class="fa-solid fa-book"></i>  Having thoughts lately on the mind??</h2>
             
-
             <div class="diary-content">
               <div class="diary-input-area">
+                <div class="calendar-wrapper">
+                    <input type="date" id="diaryDate" class="hidden-date-input" />
+                    <button type="button" class="calendar-icon" onclick="openCalendar()">
+                      <img src="calender-three.png" alt="Select Date" width="24"/>
+                    </button>
+                </div>
                  <textarea name="dairyInput" id="diaryInput" rows="5" placeholder="Jot down your thoughts here..."></textarea>
                  <button onClick="saveDiary()">Save</button>
               </div>
@@ -65,6 +78,18 @@
             This is the footer section!!
         </div>
     </footer>
+
+    <div id="popupModal" class="modal">
+        <div class="modal-content">
+            <span id="popupDate"></span>
+            <textarea id="popupText"></textarea>
+            <div class="modal-buttons">
+              <button class="modal-btn cancel" id="popupCancelBtn" onclick="closeModal()">Cancel</button>
+              <button class="modal-btn save" id="popupSaveBtn">Save</button>
+            </div>
+
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
