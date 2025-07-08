@@ -7,6 +7,10 @@ function formatDate(dateStr, format = "month-first"){
   return date.toLocaleDateString("en-US", options);
 }
 
+function truncateText(text, limit = 20) {
+  return text.length > limit ? text.slice(0,limit) + '...' : text;
+}
+
 const entriesPerStack = 4;
 const stacksPerRow = 5;
 const entriesPerPage = entriesPerStack * stacksPerRow;
@@ -91,8 +95,8 @@ function loadHabits() {
     entryDiv.className = "habit-entry";
 
     const span = document.createElement("span");
-    span.textContent = habit;
-    span.title = habit;
+    span.textContent = truncateText(habit.text,25);
+    span.title = habit.text;
     span.onclick = () => showHabitPopup(startIndex + index);
 
     const editBtn = document.createElement("button");
@@ -103,11 +107,35 @@ function loadHabits() {
     delBtn.innerHTML = `<img src="trash-bin.svg" style="width:20px; height:20px;">`;
     delBtn.onclick = () => deleteHabit(startIndex + index);
 
+    const streakDiv = document.createElement("div");
+    streakDiv.innerHTML = `
+    <img src="streak-icon.png" alt="Streak Icon" style="width:26px; height: 26px; vertical-align: middle;">
+    <span style="margin-left:4px;">${habit.streak || 0}</span>
+    `;
+    
+    const doneBtn = document.createElement("button");
+    doneBtn.innerHTML = 
+    `<img src="black-streak.png" alt="Streak Icon" style="width:26px; height: 26px; vertical-align: middle;">`;
+    doneBtn.title = "Add streak";
+    doneBtn.onclick = () => {
+      const today = new Date().toISOString().split("T")[0];
+      if(habit.lastCompleted === today){
+        alert("You have already marked your streak for today!");
+        return;
+      }
+      markHabitDone(startIndex + index);
+    }
+    
+    
     entryDiv.appendChild(span);
+    entryDiv.appendChild(streakDiv);
     entryDiv.appendChild(editBtn);
     entryDiv.appendChild(delBtn);
+    entryDiv.appendChild(doneBtn);
     habitList.appendChild(entryDiv);
+    
   });
+ 
 
   const seeMoreLink = document.getElementById("seeMoreLink");
   if (seeMoreLink) {
@@ -125,9 +153,12 @@ function loadHabits() {
 }
 
 function editHabit(entryDiv, span, index) {
+  const habits = JSON.parse(localStorage.getItem("habits")) || [];
+  if (!habits[index]) return;
+  
   const input = document.createElement("input");
   input.type = "text";
-  input.value = span.textContent;
+  input.value = habits[index].text;
   input.style.flex = "1";
   input.style = `
   flex: 1;
@@ -149,8 +180,7 @@ function editHabit(entryDiv, span, index) {
   saveBtn.onclick = () => {
     const updatedText = input.value.trim();
     if (!updatedText) return;
-    const habits = JSON.parse(localStorage.getItem("habits")) || [];
-    habits[index] = updatedText;
+    habits[index].text = updatedText;
     localStorage.setItem("habits", JSON.stringify(habits));
     loadHabits();
   };
@@ -180,24 +210,50 @@ function addHabit() {
   }
 
   const savedHabits = JSON.parse(localStorage.getItem("habits")) || [];
-  savedHabits.push(habit);
+  savedHabits.push({
+    text: habit,
+    lastCompleted: null,
+    streak: 0
+  });
   localStorage.setItem("habits", JSON.stringify(savedHabits));
 
   loadHabits();
   habitInput.value = "";
 }
 
+function markHabitDone(index) {
+  const habits = JSON.parse(localStorage.getItem("habits")) || [];
+  const today = new Date().toISOString().split("T")[0];
+  const habit = habits[index];
+  if(!habit) return;
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() -1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+  if(habit.lastCompleted === yesterdayStr){
+    habit.streak += 1;
+  }else{
+    habit.streak = 1;
+  }
+
+  habit.lastCompleted = today;
+  localStorage.setItem("habits", JSON.stringify(habits));
+  loadHabits();
+}
+
 function showHabitPopup(index) {
   const habits = JSON.parse(localStorage.getItem("habits")) || [];
+  if (!habits[index]) return;
   const modal = document.getElementById("popupModal");
 
   document.getElementById("popupDate").textContent = "Edit Habit";
-  document.getElementById("popupText").value = habits[index];
+  document.getElementById("popupText").value = habits[index].text;
 
   document.getElementById("popupSaveBtn").onclick = function () {
     const updatedText = document.getElementById("popupText").value.trim();
     if(!updatedText) return;
-    habits[index] = updatedText;
+    habits[index].text = updatedText;
     localStorage.setItem("habits", JSON.stringify(habits));
     closeModal();
     loadHabits();
@@ -227,7 +283,7 @@ function loadDiary() {
     checkbox.type = "checkbox";
 
     const span = document.createElement("span");
-    span.textContent = `${formatDate(entry.date)} - ${entry.text}`;
+    span.textContent = `${formatDate(entry.date)} - ${truncateText(entry.text, 30)}`;
     span.onclick = () => showDiaryPopup(start + index);
 
     const editBtn = document.createElement("button");
@@ -336,7 +392,7 @@ function saveDiary() {
   const dateInput = document.getElementById('diaryDate').value;
  
   if (!entry) {
-    alert("Write something before saving!");
+    alert("Please write something before saving your diary entry.");
     return;
   }
 
@@ -364,7 +420,6 @@ function showDiaryPopup(index) {
   const saveBtn = document.getElementById("popupSaveBtn");
   const cancelBtn = document.getElementById("popupCancelBtn");
   document.getElementById("popupDate").textContent = formatDate(entry.date);
-  document.getElementById("popupText").value = entry.text;
 
   if(!textArea || !dateSpan || !saveBtn || !cancelBtn) {
   alert("Popup elements not found.");
@@ -373,12 +428,11 @@ function showDiaryPopup(index) {
   textArea.value = entry.text;
   dateSpan.textContent = formatDate(entry.date);
   cancelBtn.onclick = closeModal;
-
-  saveBtn.onclick = null; 
+ 
   saveBtn.onclick = function (){
     const updatedText = document.getElementById("popupText").value.trim();
     if(!updatedText) {
-      alert("Please enter some text before saving.");
+      alert("Please write something in your diary entry before saving.");
       return;
     }
 
