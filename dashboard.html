@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.1/lottie.min.js"></script>
     <link rel="icon" href="data:,">
     
+    
 </head>
 <body>
    <div class="wrapper">
@@ -23,9 +24,9 @@
              </div>
             <!-- Left nav links -->
             <div class="nav-buttons-left">
-                <a href="">About us</a>
-                <a href="">Home</a>
-                <a href="">Contact us</a>
+                <a href="#about">About</a>
+                <a href="#home">Home</a>
+                <a href="#contact">Contact</a>
             </div>
             <!-- Right auth buttons -->
             <div class="nav-buttons-right">
@@ -35,7 +36,7 @@
         </div>
     </header>
     
-    <div class="parentcontainer">
+    <div id="home" class="parentcontainer">
 
         <div class="habit-tracker">
             <h2 class="center-heading"><i class="fa-solid fa-dice"></i>  Add Your Daily Habits</h2>
@@ -47,50 +48,90 @@
 
             <div class="habit-block">
                  <div id="habitlist"></div>
-                 <a href="#" id="seeMoreLink" style="display: none;">See more Habits</a>
+                 <a href="#" id="seeMore" style="display: none;">See more Habits…</a>
             </div>
         </div>
 
         <div class="personal-diary">
-            <h2 class="center-heading"><i class="fa-solid fa-book"></i>  Having thoughts lately on the mind??</h2>
-            
-            <div class="diary-content">
-              <div class="diary-input-area">
-                <div class="calendar-wrapper">
-                    <input type="date" id="diaryDate" class="hidden-date-input" />
-                    <button type="button" class="calendar-icon" onclick="openCalendar()">
-                      <img src="calender-three.png" alt="Select Date" width="24"/>
-                    </button>
-                </div>
-                 <textarea name="dairyInput" id="diaryInput" rows="5" placeholder="Jot down your thoughts here..."></textarea>
-                 <button onClick="saveDiary()">Save</button>
-              </div>
-            <div id="diaryEntries" class="diary-block"></div>
-            <a href="#" id="seeMoreDiary" style="display:none;">See more Diary</a>
+           <h2><i class="fa-solid fa-book"></i> Having thoughts lately on the mind??</h2>
 
+           <div class="diary-top-section">
+              <textarea id="diaryInput" placeholder="Jots down your thoughts here..."></textarea>
+           </div>
+
+        <div class="diary-controls">
+            <input type="date" id="diaryDate" class="hidden-date-input" />
+            <button onclick="openCalendar()"><img src="calendar.png" alt="Calendar"/></button>
+
+            <button type="button" class="icon-button">
+                <label for="imageInput" style="cursor: pointer; margin: 0;">
+                    <img src="gallery-icon.png" alt="Upload Image"/>
+                </label>
+            </button>
+            <input type="file" id="imageInput" accept="image/*" style="display: none"  onchange="handleImageUpload(event)"/>
+
+            <button onclick="saveDiary()">Save</button>
             </div>
+
+            <div class="collection-heading">Your Collections</div>
+            <div id="diaryEntries" class="diary-block"></div>
+            <a href="#" id="seeMoreDiary" style="display: none;">See More Diary…</a>
         </div>
-    </div>
+      </div>
    </div>
 
-    <footer>
-        <div class="footer-content">
-            This is the footer section!!
-        </div>
-    </footer>
-
-    <div id="popupModal" class="modal">
+   <div id="popupModal" class="modal">
         <div class="modal-content">
             <span id="popupDate"></span>
+        <label for="popupImageInput" class="image-upload-btn">
+          <img src="gallery-icon.png" alt="Gallery Icon" style="width: 26px; height: 26px;" />
+          <span style="color: black; font-weight: 600;">Add Image</span>
+        </label>
+        <input type="file" id="popupImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+
+            <input type="file" id="popupImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)"> 
             <textarea id="popupText"></textarea>
             <div class="modal-buttons">
               <button class="modal-btn cancel" id="popupCancelBtn" onclick="closeModal()">Cancel</button>
               <button class="modal-btn save" id="popupSaveBtn">Save</button>
             </div>
-
         </div>
     </div>
 
+ <footer>
+    <div class="footer-container">
+      <div class="footer-content">
+    <div id="about" class="footer-about">
+      <h3>About DiaryDuo</h3>
+      <p>
+        DiaryDuo is a personal productivity web app designed to help you build better habits and reflect on your daily thoughts.
+        Whether you're tracking your goals or writing down what’s on your mind, DiaryDuo combines habit tracking and journaling
+        in one simple, beautiful space — just for you.
+      </p>
+    </div>
+  </div>  
+    <div id="contact" class="footer-contact">
+      <h3>Contact Us</h3>
+      <p>Email: <a href="mailto:support@diaryduo.com">support@diaryduo.com</a></p>
+      <p>Phone: +91-9876543210</p>
+    </div>
+
+    <div class="footer-social">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+    </div>
+   <div class="footer-bottom">
+    © 2025 DiaryDuo. All rights reserved.
+    </div>
+  </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/exif-js" defer></script>
     <script src="app.js"></script>
 </body>
 </html>

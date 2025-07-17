@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+html{
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #B8CFCE;
   font-family: Arial, sans-serif;
@@ -31,6 +35,7 @@ body {
   top:0; 
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
 }
 
 .navbar-icon{
@@ -50,7 +55,6 @@ body {
 
 .nav-buttons-left {
     display: flex;
-    /* align-items: center; */
     margin-left: 70px;
     gap: 20px;   
 }
@@ -78,6 +82,7 @@ body {
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .Loginbutton:hover, .SignUpbutton:hover {
@@ -194,6 +199,7 @@ body {
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 .habit-input-area button:hover {
@@ -236,102 +242,178 @@ body {
   border-radius: 10px;
   padding: 6px 10px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#seeMoreLink {
+  text-align: right;
+  width: 100%;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-right: 10px;
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+#seeMoreLink:hover {
+  text-decoration: underline;
 }
 
 /* ===== PERSONAL DIARY ===== */
 .personal-diary {
   background-color: #EAEFEF;
-  padding: 20px;
+  padding: 40px 30px;
   border-radius: 20px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: center;
 }
 
 .personal-diary h2 {
   text-align: center;
+  font-size: 24px;
+  font-weight: bold;
 }
 
-.diary-content {
-  display: flex;
-  gap: 20px;
+.diary-top-section {
   width: 100%;
-  flex-wrap: wrap;
-}
-
-.diary-input-area {
-  flex: 1;
-  min-width: 300px;
-  max-width: 50%;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
 }
 
-.diary-input-area textarea {
-  width: 100%;
-  height: 300px;
-  resize: none;
+.diary-top-section textarea {
+  width: 60%;
+  height: 120px;
   padding: 15px;
   border-radius: 10px;
   border: 1px solid #999;
   font-size: 1rem;
+  resize: none;
 }
 
-.diary-input-area button {
-  padding: 10px 15px;
+.diary-controls{
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.diary-controls button {
   background-color: #A7C4A0;
   color: white;
   border: none;
   border-radius: 10px;
   font-weight: bold;
+  padding: 10px 15px;
   cursor: pointer;
   width: fit-content;
+  transition: background-color 0.3s ease;
 }
 
-.diary-input-area button:hover {
+.diary-controls button:hover {
   background-color: #75896f;
 }
 
+.diary-controls img{
+  width: 26px;
+  height: 26px;
+}
+
+.collection-heading {
+  font-size: 22px;
+  font-weight: bold;
+  align-self: flex-start;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
 .diary-block {
-  flex: 1;
-  max-width: 50%;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 10px;
+}
+
+.diary-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
 }
 
 .diary-entry {
+  background-color: #e8d4d4;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #e8d4d4;
-  padding: 10px;
-  border-radius: 10px;
   gap: 10px;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .diary-entry span {
   flex: 1;
-  text-align: left;
   word-break: break-word;
+  text-align: left;
+  font-size: 1rem;
+  color: #333;
 }
+
+.diary-entry-image {
+  max-width: 100%;
+  max-height: 150px;
+  display: block;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
 
 .diary-entry button {
-  background: none;
+  background-color: #A7C4A0;
   border: none;
+  border-radius: 10px;
+  padding: 6px 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
-#diarydate{
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
+
+.diary-entry button:hover {
+  background-color: #75896f;
+}
+
+.diary-entry button img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+
+#seeMoreDiary {
+  text-align: right;
+  width: 100%;
+  font-weight: bold;
+  margin-top: 10px;
   margin-right: 10px;
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+#seeMoreDiary:hover {
+  text-decoration: underline;
 }
 
 .hidden-date-input {
@@ -340,6 +422,12 @@ body {
   pointer-events: none;
   width: 0;
   height: 0;
+}
+
+
+/* Optional tweak if you want the save button center aligned */
+.diary-input-area {
+  align-items: flex-start;
 }
 
 .calendar-icon {
@@ -372,6 +460,8 @@ body {
   border-radius: 15px;
   width: 90%;
   max-width: 400px;
+  max-height: 90vh;
+  overflow: flex;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
@@ -387,6 +477,62 @@ body {
   font-size: 1rem;
 }
 
+.popup-image-preview {
+  /* max-width: 100%;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin-top: 10px;
+  border-radius: 10px; */
+
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.zoomed-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.image-upload-btn {
+  background-color: #A7C4A0;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.image-upload-btn:hover {
+  background-color: #75896f;
+}
+
+.modal-content img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
 .modal-btn {
   background-color: #ccc;
   color: #000;
@@ -395,6 +541,16 @@ body {
   border-radius: 10px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.diary-image, .popup-image-preview {
+  width: 100%;
+  max-width: 300px;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
 .modal-btn:hover {
@@ -424,9 +580,66 @@ body {
   gap: 10px;
   background-color: #A7C4A0;
   color: white;
+  transition: background-color 0.3s ease;
+
 }
 
 .habit-tracker button:hover, .personal-diary button:hover {
   background-color: #75896f;
   text-shadow: 3px 3px 5px rgba(0,0,0,0.5);
 }
+
+footer {
+  background-color: #53565A;
+  color: white;
+  padding: 40px 30px 20px;
+  font-size: 14px;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.footer-about, .footer-contact, .footer-social {
+  flex: 1 1 300px;
+}
+
+.footer-container h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #A7C4A0;
+}
+
+.footer-container p, .footer-container a {
+  color: white;
+  text-decoration: none;
+  line-height: 1.6;
+}
+
+.footer-container a:hover {
+  text-decoration: underline;
+}
+
+.social-icons a {
+  color: white;
+  margin-right: 12px;
+  font-size: 20px;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #A7C4A0;
+}
+
+.footer-bottom {
+  margin-top: 30px;
+  text-align: center;
+  border-top: 1px solid #777;
+  padding-top: 15px;
+  font-size: 13px;
+  color: #ccc;
+}
+

@@ -213,8 +213,10 @@ function addHabit() {
   savedHabits.push({
     text: habit,
     lastCompleted: null,
-    streak: 0
+    streak: 0,
+    images: [...selectedImages]
   });
+  selectedImages = [];
   localStorage.setItem("habits", JSON.stringify(savedHabits));
 
   loadHabits();
@@ -247,17 +249,40 @@ function showHabitPopup(index) {
   if (!habits[index]) return;
   const modal = document.getElementById("popupModal");
 
-  document.getElementById("popupDate").textContent = "Edit Habit";
+  document.getElementById("popupDate").textContent = "Your Habits";
   document.getElementById("popupText").value = habits[index].text;
 
   document.getElementById("popupSaveBtn").onclick = function () {
     const updatedText = document.getElementById("popupText").value.trim();
     if(!updatedText) return;
     habits[index].text = updatedText;
+    if (selectedImages.length > 0) {
+      habits[index].images = [...selectedImages];
+      selectedImages = [];
+}
     localStorage.setItem("habits", JSON.stringify(habits));
     closeModal();
     loadHabits();
   };
+  document.querySelectorAll(".popup-image-preview").forEach(img => img.remove());
+
+  if(habits[index].images && Array.isArray(habits[index].images)){
+    habits[index].images.forEach(src => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.className = "popup-image-preview";
+      img.classList.add("zoomed-image");
+      img.style = `
+  width: 380px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 5px;
+`;
+      document.getElementById("popupDate").insertAdjacentElement("afterend", img);
+    });
+}
+
   modal.style.display = "flex";
 }
 
@@ -265,6 +290,63 @@ function closeModal() {
   document.getElementById("popupModal").style.display = "none";
 }
 
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const img = new Image();
+    img.src = e.target.result;
+
+    img.onload = function () {
+      EXIF.getData(img, function () {
+        let orientation = EXIF.getTag(this, "Orientation") || 1;
+
+        let width = img.width;
+        let height = img.height;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas size based on orientation
+        if (orientation > 4 && orientation < 9) {
+          canvas.width = height;
+          canvas.height = width;
+        } else {
+          canvas.width = width;
+          canvas.height = height;
+        }
+
+        // Transform context before drawing image
+        switch (orientation) {
+          case 2:
+            ctx.transform(-1, 0, 0, 1, width, 0); break; // horizontal flip
+          case 3:
+            ctx.transform(-1, 0, 0, -1, width, height); break; // 180°
+          case 4:
+            ctx.transform(1, 0, 0, -1, 0, height); break; // vertical flip
+          case 5:
+            ctx.transform(0, 1, 1, 0, 0, 0); break; // vertical flip + 90 rotate
+          case 6:
+            ctx.transform(0, 1, -1, 0, height, 0); break; // 90°
+          case 7:
+            ctx.transform(0, -1, -1, 0, height, width); break; // horizontal flip + 90°
+          case 8:
+            ctx.transform(0, -1, 1, 0, 0, width); break; // 270°
+          default:
+            break; // no transform needed
+        }
+
+        ctx.drawImage(img, 0, 0);
+        const fixedImage = canvas.toDataURL("image/jpeg");
+        selectedImages.push(fixedImage);
+
+        alert("Image added with correct orientation!");
+      });
+    };
+  };
+  reader.readAsDataURL(file);
+}
 
 // ---------- PERSONAL DIARY ----------
 function loadDiary() {
@@ -275,52 +357,70 @@ function loadDiary() {
   const start = currentDiaryPage * diaryPageSize;
   const diaryToShow = savedEntries.slice(start, start + diaryPageSize);
 
-  diaryToShow.forEach((entry, index) => {
-    const div = document.createElement("div");
-    div.className = "diary-entry";
+  for(let i=0; i < diaryToShow.length; i += 2){
+      const stackDiv = document.createElement("div");
+      stackDiv.className = "diary-stack";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
+      for(let j = 0; j < 2 && i + j < diaryToShow.length; j++){
+        const entry = diaryToShow[i + j];
 
-    const span = document.createElement("span");
-    span.textContent = `${formatDate(entry.date)} - ${truncateText(entry.text, 30)}`;
-    span.onclick = () => showDiaryPopup(start + index);
+        const div = document.createElement("div");
+        div.className = 'diary-entry';
+        div.innerHTML = "";
+        
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
 
-    const editBtn = document.createElement("button");
-    editBtn.innerHTML = `<img src="edit.png" style="width:20px; height:20px;">`;
-    editBtn.onclick = () => editDiary(div, span, start + index);
+        const span = document.createElement("span");
+        span.textContent = `${formatDate(entry.date)} - ${truncateText(entry.text, 30)}`;
+        span.onclick = () => showDiaryPopup(start + i + j);
 
-    const delBtn = document.createElement("button");
-    delBtn.innerHTML = `<img src="trash-bin.svg" style="width:20px; height:20px;">`;
-    delBtn.style.marginLeft = "10px";
-    delBtn.onclick = () => deleteDiaryEntry(start + index);
+        const editBtn = document.createElement("button");
+        editBtn.innerHTML = `<img src="edit.png" style="width:20px; height:20px;">`;
+        editBtn.onclick = () => editDiary(div, span, start + i + j);
 
-    div.appendChild(checkbox);
-    div.appendChild(span);
-    div.appendChild(editBtn);
-    div.appendChild(delBtn);
-    diaryContainer.appendChild(div);
-  });
+        const delBtn = document.createElement("button");
+        delBtn.innerHTML = `<img src="trash-bin.svg" style="width:20px; height:20px;">`;
+        delBtn.style.marginLeft = "10px";
+        delBtn.onclick = () => deleteDiaryEntry(start + i + j);
 
-  const seeMoreLink = document.getElementById("seeMoreDiary");
-  if (seeMoreLink) {
-    if (savedEntries.length > (currentDiaryPage + 1) * diaryPageSize) {
-      seeMoreLink.style.display = "inline";
-      seeMoreLink.onclick = (e) => {
-        e.preventDefault();
-        currentDiaryPage++;
-        loadDiary();
-      };
-    } else {
-      seeMoreLink.style.display = "none";
-    }
-  }
-}
+          div.appendChild(checkbox);
+          div.appendChild(span);
+          div.appendChild(editBtn);
+          div.appendChild(delBtn);
+
+          // if(entry.images && Array.isArray(entry.images)){
+          //   entry.images.forEach(image => {
+          //     const img = document.createElement("img");
+          //     img.src = image;
+          //     img.className = "diary-entry-image"
+          //     div.appendChild(img);
+          //   });
+          // }
+
+        stackDiv.appendChild(div);
+       }
+        diaryContainer.appendChild(stackDiv);
+      }
+      const seeMoreLink = document.getElementById("seeMoreDiary");
+      if (seeMoreLink) {
+          if (savedEntries.length > (currentDiaryPage + 1) * diaryPageSize) {
+            seeMoreLink.style.display = "inline";
+            seeMoreLink.onclick = (e) => {
+              e.preventDefault();
+              currentDiaryPage++;
+              loadDiary();
+            };
+          } else {
+            seeMoreLink.style.display = "none";
+          }
+        }
+      }
+  
 
 function openCalendar() {
   document.getElementById("diaryDate").showPicker();
 }
-
 
 function editDiary(div, span, index) {
   const entries = JSON.parse(localStorage.getItem("diaryEntries")) || [];
@@ -379,7 +479,6 @@ function editDiary(div, span, index) {
   div.appendChild(cancelBtn);
 }
 
-
 function deleteDiaryEntry(index) {
   const savedEntries = JSON.parse(localStorage.getItem("diaryEntries")) || [];
   savedEntries.splice(index, 1);
@@ -388,25 +487,32 @@ function deleteDiaryEntry(index) {
 }
 
 function saveDiary() {
-  const entry = document.getElementById("diaryInput").value.trim();
+  const entryText = document.getElementById("diaryInput").value.trim();
   const dateInput = document.getElementById('diaryDate').value;
  
-  if (!entry) {
+  if (!entryText) {
     alert("Please write something before saving your diary entry.");
     return;
   }
 
   const savedEntries = JSON.parse(localStorage.getItem("diaryEntries")) || [];
-
   const today = new Date().toISOString().split('T')[0];
   const date = dateInput || today;
 
-  savedEntries.push({text: entry, date });
-  localStorage.setItem("diaryEntries", JSON.stringify(savedEntries));
+  const newEntry = { text: entryText, date};
 
-  loadDiary();
+  if(selectedImages.length > 0) {
+    newEntry.images = [...selectedImages];
+    selectedImages = [];
+  }
+  savedEntries.push(newEntry);
+  localStorage.setItem("diaryEntries", JSON.stringify(savedEntries));
+  
   document.getElementById("diaryInput").value = "";
   document.getElementById('diaryDate').value = "";
+  
+  loadDiary();
+
 }
 
 function showDiaryPopup(index) {
@@ -425,18 +531,45 @@ function showDiaryPopup(index) {
   alert("Popup elements not found.");
   return;
   } 
+
   textArea.value = entry.text;
   dateSpan.textContent = formatDate(entry.date);
   cancelBtn.onclick = closeModal;
  
+ document.querySelectorAll(".popup-image-preview").forEach(img => img.remove());
+
+ if(entry.images && Array.isArray(entry.images)){
+  entry.images.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.className = "popup-image-preview";
+    img.classList.add("zoomed-image");
+    img.style = `
+  width: 380px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 5px;
+`;
+    dateSpan.insertAdjacentElement("afterend",img);
+  });
+ }
+
   saveBtn.onclick = function (){
-    const updatedText = document.getElementById("popupText").value.trim();
+    const updatedText = textArea.value.trim();
     if(!updatedText) {
       alert("Please write something in your diary entry before saving.");
       return;
     }
 
     entry.text = updatedText;
+
+    // let currentEditingImage = null;
+    if(selectedImages.length > 0) {
+      entry.images =  [...selectedImages];
+      selectedImages = [];
+    }
+
     entries[index] = entry;
     localStorage.setItem("diaryEntries", JSON.stringify(entries));
     closeModal();
@@ -449,6 +582,70 @@ function showDiaryPopup(index) {
 function closeModal() {
   document.getElementById("popupModal").style.display = "none";
 }
+
+let selectedImages = [];
+
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const img = new Image();
+    img.src = e.target.result;
+
+    img.onload = function () {
+      EXIF.getData(img, function () {
+        let orientation = EXIF.getTag(this, "Orientation") || 1;
+
+        let width = img.width;
+        let height = img.height;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas size based on orientation
+        if (orientation > 4 && orientation < 9) {
+          canvas.width = height;
+          canvas.height = width;
+        } else {
+          canvas.width = width;
+          canvas.height = height;
+        }
+
+        // Transform context before drawing image
+        switch (orientation) {
+          case 2:
+            ctx.transform(-1, 0, 0, 1, width, 0); break; // horizontal flip
+          case 3:
+            ctx.transform(-1, 0, 0, -1, width, height); break; // 180°
+          case 4:
+            ctx.transform(1, 0, 0, -1, 0, height); break; // vertical flip
+          case 5:
+            ctx.transform(0, 1, 1, 0, 0, 0); break; // vertical flip + 90 rotate
+          case 6:
+            ctx.transform(0, 1, -1, 0, height, 0); break; // 90°
+          case 7:
+            ctx.transform(0, -1, -1, 0, height, width); break; // horizontal flip + 90°
+          case 8:
+            ctx.transform(0, -1, 1, 0, 0, width); break; // 270°
+          default:
+            break; // no transform needed
+        }
+
+        ctx.drawImage(img, 0, 0);
+        const fixedImage = canvas.toDataURL("image/jpeg");
+        selectedImages.push(fixedImage);
+
+        alert("Image added with correct orientation!");
+      });
+    };
+  };
+  reader.readAsDataURL(file);
+}
+
+
+
+
 
 // ---------- INIT ----------
 window.onload = function () {
